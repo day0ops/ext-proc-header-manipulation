@@ -1,4 +1,4 @@
-FROM alpine:3.20
+FROM alpine:3.21
 
 # TARGETOS and TARGETARCH are set automatically when --platform is provided.
 ARG TARGETOS
@@ -7,7 +7,7 @@ ARG NAME
 
 ADD "https://curl.haxx.se/ca/cacert.pem" "/etc/ssl/certs/ca-certificates.crt"
 ADD "./bin/${NAME}/${TARGETOS}_${TARGETARCH}/${NAME}" "/server"
-RUN apk add curl
+RUN apk add --no-cache curl
 
 # Create a non-root user to run this.
 RUN addgroup rps
