@@ -41,4 +41,4 @@ jobs:
       - name: Build and push image
         run: PUSH_MULTIARCH=true make docker-build
         env:
-          XC_ARCH: amd64
+          DOCKER_SUPPORTED_PLATFORMS: linux/amd64
