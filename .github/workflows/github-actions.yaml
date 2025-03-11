@@ -28,7 +28,9 @@ jobs:
         run: "gcloud info"
 
       - name: "Install podman"
-        uses: gacts/install-podman@v1
+        run: |-
+          apt-get update
+          apt-get -y install podman
 
       - run: podman version
 
