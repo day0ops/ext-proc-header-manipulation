@@ -1,0 +1,81 @@
+name: it should match empty instruction
+input:
+  headers:
+    - name: x-gateway-id
+      value: Gloo
+expect:
+  requestHeaders:
+    - name: x-gateway-id
+      exact: Gloo
+---
+name: it should match addHeaders instruction
+input:
+  headers:
+    - name: instructions
+      value: '{
+        "addHeaders": {
+          "x-gateway-id": "Gloo"
+        }
+      }'
+expect:
+  requestHeaders:
+    - name: x-gateway-id
+      exact: Gloo
+---
+name: it should match multiple addHeaders instructions
+input:
+  headers:
+    - name: instructions
+      value: '{
+        "addHeaders": {
+          "x-gateway-id": "Gloo",
+          "x-app-id": "ext-proc"
+        }
+      }'
+expect:
+  requestHeaders:
+    - name: x-gateway-id
+      exact: Gloo
+    - name: x-app-id
+      exact: ext-proc
+---
+name: it should match removeHeaders instruction
+input:
+  headers:
+    - name: x-gateway-id
+      value: Gloo
+    - name: x-app-id
+      value: ext-proc
+    - name: instructions
+      value: '{
+        "removeHeaders": [
+          "x-app-id"
+        ]
+      }'
+expect:
+  requestHeaders:
+    - name: x-gateway-id
+      exact: Gloo
+---
+name: it should match removeHeaders instruction
+input:
+  headers:
+    - name: x-gateway-id
+      value: Gloo
+    - name: x-app-id
+      value: ext-proc
+    - name: instructions
+      value: '{
+        "addHeaders": {
+          "x-user-id": "tester"
+        },
+        "removeHeaders": [
+          "x-app-id"
+        ]
+      }'
+expect:
+  requestHeaders:
+    - name: x-gateway-id
+      exact: Gloo
+    - name: x-user-id
+      exact: tester
