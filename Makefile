@@ -106,6 +106,9 @@ ifdef PODMAN_EXISTS
 		--tag="${REPO}/${NAME}" \
 		--tag="${REPO}/${NAME}:${VERSION}" \
 		"${PROJ_DIR}"
+
+	podman push ${REPO}/${NAME}
+	podman push ${REPO}/${NAME}:${VERSION}
 else
 	@echo "==> Building multi-arch images with Docker"
 	@docker buildx build \
