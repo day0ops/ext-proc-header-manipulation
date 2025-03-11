@@ -29,8 +29,8 @@ jobs:
 
       - name: "Install podman"
         run: |-
-          apt-get update
-          apt-get -y install podman
+          sudo apt-get update
+          sudo apt-get -y install podman
 
       - run: podman version
 
