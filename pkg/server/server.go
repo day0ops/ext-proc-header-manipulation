@@ -3,7 +3,6 @@ package server
 import (
 	"context"
 	"fmt"
-	"log/slog"
 	"net"
 	"net/http"
 	"os"
@@ -91,7 +90,7 @@ func (s *Server) Serve() error {
 	errCh := make(chan error, 1)
 	if s.mockBackend.enabled {
 		go func() {
-			slog.Info("starting mock http server", "address", s.mockBackend.bindAddress)
+			s.log.Info("starting mock http server", zap.String("address", s.mockBackend.bindAddress))
 			errCh <- s.mockBackend.httpsrv.ListenAndServe()
 		}()
 	}
@@ -108,7 +107,7 @@ func (s *Server) Serve() error {
 		extProcProcessor := processor.New(s.log)
 		extproc.RegisterExternalProcessorServer(s.grpcServer, extProcProcessor)
 		grpc_health_v1.RegisterHealthServer(s.grpcServer, &processor.HealthServer{Log: s.log})
-		slog.Info("starting ext proc grpc server", "address", s.grpcAddress)
+		s.log.Info("starting ext proc grpc server", zap.String("address", s.grpcAddress))
 		errCh <- s.grpcServer.Serve(listener)
 	}()
 
@@ -125,14 +124,14 @@ func (s *Server) Stop() error {
 	defer cancel()
 
 	if s.grpcServer != nil {
-		slog.Info("stopping grpc server")
+		s.log.Info("stopping grpc server")
 		s.grpcServer.GracefulStop()
 	}
 	if s.grpcNetwork == "unix" {
 		os.RemoveAll(s.grpcAddress) // nolint:errcheck
 	}
 	if s.mockBackend.httpsrv != nil {
-		slog.Info("stopping http server")
+		s.log.Info("stopping http server")
 		if err := s.mockBackend.httpsrv.Shutdown(ctx); err != nil {
 			return fmt.Errorf("http server shutdown error: %w", err)
 		}
