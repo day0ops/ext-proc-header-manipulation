@@ -24,7 +24,7 @@ type Instructions struct {
 }
 
 type HealthServer struct {
-	log *zap.Logger
+	Log *zap.Logger
 }
 
 func New(log *zap.Logger) *ProcessingServer {
@@ -33,7 +33,7 @@ func New(log *zap.Logger) *ProcessingServer {
 }
 
 func (s *HealthServer) Check(ctx context.Context, in *grpc_health_v1.HealthCheckRequest) (*grpc_health_v1.HealthCheckResponse, error) {
-	s.log.Debug("handling health check request", zap.String("service", in.String()))
+	s.Log.Debug("handling health check request", zap.String("service", in.String()))
 	return &grpc_health_v1.HealthCheckResponse{Status: grpc_health_v1.HealthCheckResponse_SERVING}, nil
 }
 

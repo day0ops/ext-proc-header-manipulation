@@ -17,7 +17,7 @@ import (
 )
 
 var (
-	grpcport = flag.String("port", "18080", "port used for gRPC server")
+	grpcport = flag.String("port", "8081", "port used for gRPC server")
 )
 
 func main() {
