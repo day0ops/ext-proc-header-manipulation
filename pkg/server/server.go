@@ -182,7 +182,7 @@ func WithGrpcServer(server *grpc.Server, network string, address string) Option 
 	return func(s *Server) {
 		s.grpcServer = server
 		s.grpcNetwork = network
-		s.grpcAddress = address
+		s.grpcAddress = fmt.Sprintf(":%s", address)
 	}
 }
 
