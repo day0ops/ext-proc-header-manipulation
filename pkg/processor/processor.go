@@ -6,6 +6,7 @@ import (
 	"io"
 	"strings"
 
+	"github.com/day0ops/ext-proc-header-manipulation/pkg/config"
 	core_v3 "github.com/envoyproxy/go-control-plane/envoy/config/core/v3"
 	service_ext_proc_v3 "github.com/envoyproxy/go-control-plane/envoy/service/ext_proc/v3"
 	"go.uber.org/zap"
@@ -150,6 +151,12 @@ func (s *ProcessingServer) processHeaderInstructions(in *service_ext_proc_v3.Htt
 			s.log.Info("adding headers", zap.String("key", k), zap.String("value", v))
 			addHeaders = append(addHeaders, &core_v3.HeaderValueOption{
 				Header: &core_v3.HeaderValue{Key: k, RawValue: []byte(v)},
+			})
+		}
+		// if pod name is available then inject it as a header too
+		if config.PodName != "" {
+			addHeaders = append(addHeaders, &core_v3.HeaderValueOption{
+				Header: &core_v3.HeaderValue{Key: "pod", RawValue: []byte(config.PodName)},
 			})
 		}
 		resp.Response.HeaderMutation = &service_ext_proc_v3.HeaderMutation{

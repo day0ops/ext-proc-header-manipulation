@@ -40,7 +40,7 @@ func start() int {
 
 	flag.Parse()
 
-	s := server.New(context.Background(), zap.NewNop(), server.WithGrpcServer(nil, "tcp", *grpcport))
+	s := server.New(context.Background(), log, server.WithGrpcServer(nil, "tcp", *grpcport))
 
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGTERM, syscall.SIGINT)
 	defer stop()
